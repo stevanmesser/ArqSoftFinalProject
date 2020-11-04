@@ -1,8 +1,9 @@
 import { Router } from 'express';
 
-const routes = new Router();
+import authMiddleware from '~/middlewares/auth';
+// import subscriptionCtl from './controllers/subscription';
 
-import authMiddleware from './middlewares/auth';
+const routes = new Router();
 
 routes.use(authMiddleware);
 
