@@ -1,17 +1,23 @@
 import jwt from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
 import authConfig from '~/configs/auth';
 import User from '~/database/models/User';
 
 async function create(req, res) {
-  const user = await User.create(req.body);
+  const { password } = req.body;
 
-  return res.json(user);
+  const user = await User.create({
+    ...req.body,
+    password: await bcrypt.hash(password, 8),
+  });
+
+  return res.json({ ...user, password: undefined });
 }
 
 async function update(req, res) {
   const user = await User.findByIdAndUpdate(req.userId, req.body);
 
-  return res.json(user);
+  return res.json({ ...user, password: undefined });
 }
 
 async function getOwn(req, res) {
@@ -33,7 +39,7 @@ async function login(req, res) {
 
   if (!user) return res.status(401).json({ error: 'User not found' });
 
-  if (!(await user.checkPassword(password)))
+  if (!(await bcrypt.compare(password, user.password)))
     return res.status(401).json({ error: 'Password does not match' });
 
   const { id } = user;

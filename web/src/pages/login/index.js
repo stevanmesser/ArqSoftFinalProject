@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { MdPersonAdd, MdPerson, MdLock } from 'react-icons/md';
 import { toast } from 'react-toastify';
-import api from '~/services/api';
+import api from '../../services/api';
 import { login } from '~/local/auth';
 
-import { Container } from './styles/Login';
+import { Container } from './styles';
 
 export default function Login() {
-  const [name, setname] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setpassword] = useState('');
 
   const history = useHistory();
@@ -19,16 +19,17 @@ export default function Login() {
     async function tryLogin() {
       try {
         const resPersonage = await api.post('/login', {
-          name,
+          email,
           password,
         });
 
-        // login(resPersonage.data.token);
-        // window.location.reload(false);
-        // history.push('/');
+        toast.info('Bem vindo');
+        login(resPersonage.data.token);
+        window.location.reload(false);
+        history.push('/');
       } catch (error) {
         setpassword('');
-        toast.error('Usuário ou senha inválido!');
+        toast.error('Email ou senha inválido!');
       }
     }
 
@@ -45,12 +46,12 @@ export default function Login() {
         <div className="divInput">
           <MdPerson />
           <input
-            name="name"
-            id="name"
-            placeholder="Usuário"
+            email="email"
+            id="email"
+            placeholder="Email"
             required
-            value={name}
-            onChange={(e) => setname(e.target.value)}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
         </div>
 
@@ -58,7 +59,7 @@ export default function Login() {
           <MdLock />
           <input
             type="password"
-            name="password"
+            email="password"
             id="password"
             placeholder="Senha"
             required
@@ -71,7 +72,7 @@ export default function Login() {
           Entrar
         </button>
 
-        <Link to="/register">
+        <Link to="/user">
           <MdPersonAdd className="left-icons" />
           Cadastrar
         </Link>
