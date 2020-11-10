@@ -15,7 +15,12 @@ async function create(req, res) {
 }
 
 async function update(req, res) {
-  const user = await User.findByIdAndUpdate(req.userId, req.body);
+  const { password } = req.body;
+
+  const user = await User.findByIdAndUpdate(req.userId, {
+    ...req.body,
+    password: password ? await bcrypt.hash(password, 8) : undefined,
+  });
 
   return res.json({ ...user, password: undefined });
 }
@@ -39,7 +44,7 @@ async function login(req, res) {
 
   if (!user) return res.status(401).json({ error: 'User not found' });
 
-  if (!(await bcrypt.compare(password, user.password)))
+  if (!!user.password && !(await bcrypt.compare(password, user.password)))
     return res.status(401).json({ error: 'Password does not match' });
 
   const { id } = user;

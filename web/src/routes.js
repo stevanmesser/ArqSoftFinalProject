@@ -1,13 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 
 import { isAuthenticated } from '~/local/auth';
+import { getUserLS, reloadUser } from '~/local/user';
 import Login from './pages/login';
 import User from './pages/user';
 import Event from './pages/event';
 
 export default function Routes() {
-  const [logado] = useState(isAuthenticated());
+  const [logado, setLogado] = useState();
+
+  useEffect(() => {
+    async function load() {
+      await reloadUser();
+
+      if (getUserLS) {
+        setLogado(true);
+      }
+    }
+    if (isAuthenticated()) {
+      load();
+    }
+  }, []);
 
   return (
     <Route>

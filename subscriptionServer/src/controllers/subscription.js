@@ -1,4 +1,4 @@
-import { addDays, isAfter } from 'date-fns';
+import { isAfter, subDays } from 'date-fns';
 import Subscription from '~/database/models/Subscription';
 import Event from '~/database/models/Event';
 
@@ -17,11 +17,15 @@ async function getOwns(req, res) {
 }
 
 async function delet(req, res) {
-  const { event_id } = req.params;
+  const { id: event_id } = req.params;
 
   const event = await Event.findById(event_id);
 
-  const dateLimit = addDays(event.date, event.days_to_cancel);
+  if (!event) {
+    return res.json({ ok: false, message: "Event don't finded" });
+  }
+
+  const dateLimit = subDays(event.date, event.days_to_cancel);
 
   if (isAfter(new Date(), dateLimit)) {
     // validação de days to cancel

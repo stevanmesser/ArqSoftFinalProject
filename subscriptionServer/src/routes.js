@@ -7,9 +7,11 @@ import authMiddleware from './middlewares/auth';
 
 const routes = new Router();
 
-routes.post('/events', eventCtl.getList);
+routes.get('/events', eventCtl.getList);
 
 routes.use(authMiddleware);
+
+routes.post('/events', eventCtl.create);
 
 routes.post('/subscriptions/:id', subscriptionsCtl.create);
 routes.get('/subscriptions/owns', subscriptionsCtl.getOwns);

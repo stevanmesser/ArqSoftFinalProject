@@ -3,6 +3,8 @@ import express from 'express';
 import cors from 'cors';
 import routes from './routes';
 
+import '~/database/connect';
+
 class App {
   constructor() {
     this.server = express();
@@ -10,7 +12,7 @@ class App {
     this.middlewares();
     this.routes();
 
-    this.server.listen(3333);
+    this.server.listen(3334);
   }
 
   middlewares() {

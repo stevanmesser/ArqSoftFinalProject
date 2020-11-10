@@ -50,6 +50,10 @@ export default function User() {
 
   return (
     <Container>
+      <Link className="link" to="events">
+        Inicio
+      </Link>
+
       <form>
         <strong>{logado ? 'Perfil' : 'Cadastrar'}</strong>
 
@@ -86,7 +90,7 @@ export default function User() {
           />
         </div>
 
-        {!logado && (
+        {(!logado || user.needPassword) && (
           <div className="divInput">
             <label htmlFor="password">Senha</label>
             <input

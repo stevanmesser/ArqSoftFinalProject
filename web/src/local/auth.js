@@ -1,4 +1,4 @@
-import { PERSONAGE_LS } from './user';
+import { USER_LS } from './user';
 
 export const TOKEN_KEY = 'persistArqSoftFinalProject:Token';
 
@@ -9,5 +9,5 @@ export const login = (token) => {
 };
 export const logout = () => {
   localStorage.removeItem(TOKEN_KEY);
-  localStorage.removeItem(PERSONAGE_LS);
+  localStorage.removeItem(USER_LS);
 };

@@ -72,7 +72,7 @@ export default function Login() {
           Entrar
         </button>
 
-        <Link to="/user">
+        <Link className="link" to="/user">
           <MdPersonAdd className="left-icons" />
           Cadastrar
         </Link>

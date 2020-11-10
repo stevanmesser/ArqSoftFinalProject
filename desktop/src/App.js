@@ -1,9 +1,19 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import { ToastContainer } from 'react-toastify';
+import { BrowserRouter } from 'react-router-dom';
+
+import GlobalStyle from './styles/global';
+import Routes from './routes';
 
 function App() {
   return (
-  )
+    <BrowserRouter>
+      <GlobalStyle />
+      <Routes />
+      <ToastContainer autoClose={3000} />
+      <strong>Teste</strong>
+    </BrowserRouter>
+  );
 }
 
 export default App;

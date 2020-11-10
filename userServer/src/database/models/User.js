@@ -15,6 +15,10 @@ const UserSchema = new Schema({
   password: {
     type: String,
   },
+  admin: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 export default mongoose.model('users', UserSchema);
