@@ -4,40 +4,37 @@ import { Link, useHistory } from 'react-router-dom';
 import InputMask from 'react-input-mask';
 import { toast } from 'react-toastify';
 import { FiArrowLeftCircle } from 'react-icons/fi';
-import api from '~/services/api';
-import { isAuthenticated } from '~/local/auth';
-import { getUserLS, setUserLS } from '~/local/user';
+import api from '../../services/api';
 
 import { Container } from './styles';
 
 export default function User() {
-  const [user, setUser] = useState(getUserLS() || {});
+  const [user, setUser] = useState({});
   const history = useHistory();
-  const [logado] = useState(isAuthenticated());
 
   function handleSaveUser(e) {
     e.preventDefault();
 
     async function saveUser() {
-      console.log(user);
+      const { name, cpf, phone, email } = user;
+
+      if (!name) {
+        toast.error("Name it's necessary");
+        return;
+      }
+
+      if (!cpf && !phone && !email) {
+        toast.error('Necessary CPF or Phone or Email');
+        return;
+      }
+
       try {
-        let resUser;
-        if (logado) {
-          resUser = await api.put('/users', user);
-          toast.success('Usuário salvo');
-          setUserLS(resUser.data);
-        } else {
-          resUser = await api.post('/users', {
-            ...user,
-            newPassword: user.password,
-          });
-          toast.success('Usuário criado');
-          history.push('/login');
-        }
-        setUser(resUser.data);
+        await api.post('/users', user);
+
+        toast.success('Usuário criado');
+        history.push('/checkin');
       } catch (error) {
         toast.error('Falha ao salvar o Perfil');
-        console.log(error);
       }
     }
 
@@ -50,14 +47,8 @@ export default function User() {
 
   return (
     <Container>
-      {logado && (
-        <Link className="link" to="events">
-          Inicio
-        </Link>
-      )}
-
       <form>
-        <strong>{logado ? 'Perfil' : 'Cadastrar'}</strong>
+        <strong>Cadastro rápido</strong>
 
         <div className="divInput">
           <label htmlFor="name">Nome</label>
@@ -82,7 +73,7 @@ export default function User() {
         </div>
 
         <div className="divInput">
-          <label htmlFor="cpf">Nome</label>
+          <label htmlFor="cpf">CPF</label>
           <InputMask
             name="cnpj"
             id="cnpj"
@@ -103,29 +94,13 @@ export default function User() {
           />
         </div>
 
-        {(!logado || user.needPassword) && (
-          <div className="divInput">
-            <label htmlFor="password">Senha</label>
-            <input
-              name="password"
-              id="password"
-              type="password"
-              required
-              value={user.password || ''}
-              onChange={handleInputChange}
-            />
-          </div>
-        )}
-
         <button type="submit" onClick={handleSaveUser}>
-          {logado ? 'Salvar' : 'Cadastrar'}
+          Cadastrar
         </button>
 
-        {!logado ? (
-          <Link to="/login">
-            <FiArrowLeftCircle /> Já possuo cadastro
-          </Link>
-        ) : null}
+        <Link to="/checkin">
+          <FiArrowLeftCircle /> Cancelar
+        </Link>
       </form>
     </Container>
   );

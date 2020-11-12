@@ -33,6 +33,16 @@ api5.interceptors.request.use(async (config) => {
   return config;
 });
 
-export { api4, api5 };
+const api6 = Axios.create({
+  baseURL: 'http://localhost:3335',
+});
+
+api6.interceptors.request.use(async (config) => {
+  const token = localStorage.getItem(TOKEN_KEY);
+  if (token) config.headers.Authorization = `Bearer ${token}`;
+  return config;
+});
+
+export { api4, api5, api6 };
 
 export default api;

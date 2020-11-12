@@ -10,7 +10,7 @@ class App {
     this.middlewares();
     this.routes();
 
-    this.server.listen(3333);
+    this.server.listen(3336);
   }
 
   middlewares() {
