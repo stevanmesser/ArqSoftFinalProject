@@ -17,7 +17,6 @@ const SubscriptionSchema = new Schema({
   },
   certificate_code: {
     type: String,
-    required: false,
   },
 });
 

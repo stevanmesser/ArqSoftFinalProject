@@ -6,10 +6,12 @@ import User from '~/database/models/User';
 async function create(req, res) {
   const { password } = req.body;
 
-  const user = await User.create({
+  const resUser = await User.create({
     ...req.body,
     password: await bcrypt.hash(password, 8),
   });
+
+  const user = resUser.toJSON();
 
   return res.json({ ...user, password: undefined });
 }
@@ -17,16 +19,20 @@ async function create(req, res) {
 async function update(req, res) {
   const { password } = req.body;
 
-  const user = await User.findByIdAndUpdate(req.userId, {
+  const resUser = await User.findByIdAndUpdate(req.userId, {
     ...req.body,
     password: password ? await bcrypt.hash(password, 8) : undefined,
   });
+
+  const user = resUser.toJSON();
 
   return res.json({ ...user, password: undefined });
 }
 
 async function getOwn(req, res) {
-  const user = await User.findById(req.userId);
+  const resUser = await User.findById(req.userId);
+
+  const user = resUser.toJSON();
 
   return res.json({
     ...user,

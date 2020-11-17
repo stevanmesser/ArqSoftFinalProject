@@ -67,20 +67,5 @@ export const Container = styled.div`
         background: #009191;
       }
     }
-
-    a {
-      font-size: 14px;
-      color: #fff;
-      cursor: pointer;
-      text-decoration: underline;
-      opacity: 1;
-      display: flex;
-      align-items: center;
-      margin: 0 auto;
-
-      &:hover {
-        opacity: 0.8;
-      }
-    }
   }
 `;

@@ -1,6 +1,11 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
+  width: 100%;
+  background: rgba(80, 80, 80, 0.9); /* opacity: 0.9*/
+  padding: 20px;
+  position: relative;
+
   .menu {
     margin: 4px;
   }
@@ -15,20 +20,23 @@ export const Container = styled.div`
   }
 
   ul {
-    width: 1000px;
+    margin-top: 20px;
+    width: 400px;
+    /* background: #fff; */
   }
 
   li {
     margin: 4px;
+    align-items: center;
 
     strong {
       color: #fff;
-      margin-left: 4px;
+      margin-left: 8px;
     }
 
     svg {
-      height: 20px;
-      width: 20px;
+      height: 26px;
+      width: 26px;
       transition: background 0.5s;
       border-radius: 50%;
       background: transparent;
@@ -37,6 +45,7 @@ export const Container = styled.div`
       &:hover {
         background: #fff;
         color: #333;
+        cursor: pointer;
       }
     }
   }

@@ -15,6 +15,9 @@ const SubscriptionSchema = new Schema({
     type: Boolean,
     default: false,
   },
+  certificate_code: {
+    type: String,
+  },
 });
 
 export default mongoose.model('subscriptions', SubscriptionSchema);

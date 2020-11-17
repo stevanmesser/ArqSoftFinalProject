@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { MdAssignmentTurnedIn, MdAssignmentReturned } from 'react-icons/md';
+import {
+  MdAssignmentTurnedIn,
+  MdAssignmentReturned,
+  MdCardMembership,
+  MdPictureAsPdf,
+} from 'react-icons/md';
 import { toast } from 'react-toastify';
 import { api4 } from '~/services/api';
 
@@ -22,7 +27,7 @@ export default function Event() {
     setEvents(
       actEvents.map((event) => ({
         ...event,
-        subscribed: subs.some(({ event_id }) => event_id === event._id),
+        subscription: subs.find(({ event_id }) => event_id === event._id),
       }))
     );
 
@@ -74,6 +79,30 @@ export default function Event() {
     loadEvents();
   }
 
+  async function generateCertificate(e, id) {
+    e.preventDefault();
+
+    const res = (await api4.delete(`/generate/${id}`)).data;
+
+    if (res.ok) {
+      toast.success('Generated Certificate');
+    } else {
+      toast.error(res.message);
+    }
+  }
+
+  async function generatePDF(e, id) {
+    e.preventDefault();
+
+    const res = (await api4.delete(`/pdf/${id}`)).data;
+
+    if (res.ok) {
+      toast.success('Generated PDF');
+    } else {
+      toast.error(res.message);
+    }
+  }
+
   return (
     <Container>
       <div className="menu">
@@ -107,7 +136,14 @@ export default function Event() {
       <ul>
         {events.map((event) => (
           <li key={event._id}>
-            {event.subscribed ? (
+            {event.subscription?.certificate_code &&
+              <MdPictureAsPdf onClick={e => generatePDF(e, event.subscription.certificate_code)} />}
+            {event.subscription?.checked && (
+              <MdCardMembership
+                onClick={(e) => generateCertificate(e, event.subscription._id)}
+              />
+            )}
+            {event.subscription ? (
               <MdAssignmentTurnedIn
                 onClick={(e) => doUnSubscribe(e, event._id)}
               />

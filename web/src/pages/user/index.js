@@ -82,7 +82,7 @@ export default function User() {
         </div>
 
         <div className="divInput">
-          <label htmlFor="cpf">Nome</label>
+          <label htmlFor="cpf">CPF</label>
           <InputMask
             name="cnpj"
             id="cnpj"
@@ -122,7 +122,7 @@ export default function User() {
         </button>
 
         {!logado ? (
-          <Link to="/login">
+          <Link className="link" to="/login">
             <FiArrowLeftCircle /> Já possuo cadastro
           </Link>
         ) : null}

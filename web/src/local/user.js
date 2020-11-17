@@ -11,6 +11,7 @@ export function setUserLS(user) {
 export async function reloadUser(userId) {
   try {
     const resUser = await api.get('/users/own');
+    console.log(resUser.data);
     setUserLS(resUser.data);
   } catch (error) {
     console.error(error.error);

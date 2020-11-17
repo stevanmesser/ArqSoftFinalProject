@@ -22,14 +22,14 @@ async function delet(req, res) {
   const event = await Event.findById(event_id);
 
   if (!event) {
-    return res.json({ ok: false, message: "Event don't finded" });
+    return res.json({ ok: false, message: 'Event not found' });
   }
 
   const dateLimit = subDays(event.date, event.days_to_cancel);
 
   if (isAfter(new Date(), dateLimit)) {
     // validação de days to cancel
-    return res.json({ ok: false, message: 'Date to cancel expired' });
+    return res.json({ ok: false, message: 'Expired date to cancel' });
   }
 
   await Subscription.deleteOne({ event_id, user_id: req.userId });

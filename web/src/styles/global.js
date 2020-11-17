@@ -77,8 +77,13 @@ export default createGlobalStyle`
     font-size: 14px;
     color: #fff;
     cursor: pointer;
-    text-decoration: underline;
+    /* text-decoration: underline; */
     opacity: 1;
+    background: #111;
+    width: fit-content;
+    border-radius: 8px;
+    padding: 4px 8px;
+    font-weight: bold;
     /* margin: 0 auto; */
     /* justify-content: center;
     align-items: center; */
