@@ -3,46 +3,36 @@ import Axios from 'axios';
 
 export const TOKEN_KEY = 'persistArqSoftFinalProject:Token';
 
-const api = Axios.create({
-  baseURL: 'http://localhost:3333',
-});
+const apisPorteds = [];
 
-api.interceptors.request.use(async (config) => {
-  const token = localStorage.getItem(TOKEN_KEY);
-  if (token) config.headers.Authorization = `Bearer ${token}`;
-  return config;
-});
+// const api = Axios.create({
+//   baseURL: 'http://localhost:3333',
+// });
 
-const api4 = Axios.create({
-  baseURL: 'http://localhost:3334',
-});
+// api.interceptors.request.use(async (config) => {
+//   const token = localStorage.getItem(TOKEN_KEY);
+//   if (token) config.headers.Authorization = `Bearer ${token}`;
+//   return config;
+// });
 
-api4.interceptors.request.use(async (config) => {
-  const token = localStorage.getItem(TOKEN_KEY);
-  if (token) config.headers.Authorization = `Bearer ${token}`;
-  return config;
-});
+export default (port) => {
+  const findApi = apisPorteds.find(({ port: actPort }) => actPort === port);
 
-const api5 = Axios.create({
-  baseURL: 'http://localhost:3335',
-});
+  if (findApi) {
+    return findApi.api;
+  }
 
-api5.interceptors.request.use(async (config) => {
-  const token = localStorage.getItem(TOKEN_KEY);
-  if (token) config.headers.Authorization = `Bearer ${token}`;
-  return config;
-});
+  const api = Axios.create({
+    baseURL: `http://localhost:${port}`,
+  });
 
-const api6 = Axios.create({
-  baseURL: 'http://localhost:3335',
-});
+  api.interceptors.request.use(async (config) => {
+    const token = localStorage.getItem(TOKEN_KEY);
+    if (token) config.headers.Authorization = `Bearer ${token}`;
+    return config;
+  });
 
-api6.interceptors.request.use(async (config) => {
-  const token = localStorage.getItem(TOKEN_KEY);
-  if (token) config.headers.Authorization = `Bearer ${token}`;
-  return config;
-});
+  apisPorteds.push({ port, api });
 
-export { api4, api5, api6 };
-
-export default api;
+  return api;
+};

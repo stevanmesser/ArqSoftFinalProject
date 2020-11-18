@@ -6,6 +6,11 @@ export const Container = styled.div`
   padding: 20px;
   position: relative;
 
+  strong {
+    color: #fff;
+    margin-left: 4px;
+  }
+
   .menu {
     margin: 4px;
   }
@@ -27,12 +32,10 @@ export const Container = styled.div`
 
   li {
     margin: 4px;
+    padding: 4px;
     align-items: center;
-
-    strong {
-      color: #fff;
-      margin-left: 8px;
-    }
+    background: #666;
+    border-radius: 8px;
 
     svg {
       height: 26px;
@@ -41,6 +44,7 @@ export const Container = styled.div`
       border-radius: 50%;
       background: transparent;
       color: #fff;
+      margin-right: 10px;
 
       &:hover {
         background: #fff;
@@ -48,5 +52,9 @@ export const Container = styled.div`
         cursor: pointer;
       }
     }
+  }
+
+  .event-date {
+    margin: 0 10px;
   }
 `;

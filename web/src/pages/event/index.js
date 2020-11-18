@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import {format} from 'date-fns'
 import {
   MdAssignmentTurnedIn,
   MdAssignmentReturned,
@@ -7,7 +8,7 @@ import {
   MdPictureAsPdf,
 } from 'react-icons/md';
 import { toast } from 'react-toastify';
-import { api4 } from '~/services/api';
+import api from '~/services/api';
 
 import { getUserLS } from '~/local/user';
 import { Container } from './styles';
@@ -20,9 +21,9 @@ export default function Event() {
   const [newEventDate, setNewEventDate] = useState('');
 
   async function loadEvents() {
-    const actEvents = (await api4.get('/events')).data || [];
+    const actEvents = (await api(process.env.REACT_APP_EVENT_PORT).get('/events')).data || [];
 
-    const subs = (await api4.get('/subscriptions/owns')).data || [];
+    const subs = (await api(process.env.REACT_APP_EVENT_PORT).get('/subscriptions/owns')).data || [];
 
     setEvents(
       actEvents.map((event) => ({
@@ -44,7 +45,7 @@ export default function Event() {
   async function doAddEvent(e) {
     e.preventDefault();
 
-    const event = await api4.post('/events', {
+    const event = await api(process.env.REACT_APP_EVENT_PORT).post('/events', {
       name: newEvent,
       date: newEventDate,
     });
@@ -54,7 +55,7 @@ export default function Event() {
   async function doSubscribe(e, id) {
     e.preventDefault();
 
-    const res = (await api4.post(`/subscriptions/${id}`)).data;
+    const res = (await api(process.env.REACT_APP_EVENT_PORT).post(`/subscriptions/${id}`)).data;
 
     if (res.ok) {
       toast.success('Subscribed');
@@ -68,7 +69,11 @@ export default function Event() {
   async function doUnSubscribe(e, id) {
     e.preventDefault();
 
-    const res = (await api4.delete(`/subscriptions/${id}`)).data;
+    if (events.find(({_id}) => _id === id).subscription.checked) {
+      return;
+    }
+
+    const res = (await api(process.env.REACT_APP_EVENT_PORT).delete(`/subscriptions/${id}`)).data;
 
     if (res.ok) {
       toast.success('Unsubscribed');
@@ -82,34 +87,26 @@ export default function Event() {
   async function generateCertificate(e, id) {
     e.preventDefault();
 
-    const res = (await api4.delete(`/generate/${id}`)).data;
+    try {
+      const res = (await api(process.env.REACT_APP_CERTIFICATE_PORT).post(`/generate/${id}`)).data;
 
-    if (res.ok) {
-      toast.success('Generated Certificate');
-    } else {
-      toast.error(res.message);
+      window.alert(res.certificate_code);
+      toast.success('Generated certificate');
+    }
+    catch(error) {
+      toast.error('Error on generate certificate');
     }
   }
 
   async function generatePDF(e, id) {
     e.preventDefault();
 
-    const res = (await api4.delete(`/pdf/${id}`)).data;
-
-    if (res.ok) {
-      toast.success('Generated PDF');
-    } else {
-      toast.error(res.message);
-    }
+    window.open(`http://localhost:3332/pdf/${id}`)
   }
 
   return (
     <Container>
-      <div className="menu">
-        <Link className="link" to="/user">
-          Perfil
-        </Link>
-      </div>
+      <strong>Events and subscriptions</strong>
 
       {user.admin && (
         <div>
@@ -152,6 +149,7 @@ export default function Event() {
                 onClick={(e) => doSubscribe(e, event._id)}
               />
             )}
+            <label htmlFor="teste" className='event-date'>{format(new Date(event.date), 'dd/MM/yy hh:mm')}</label>
             <strong>{event.name}</strong>
           </li>
         ))}

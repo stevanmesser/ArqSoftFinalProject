@@ -29,7 +29,7 @@ export default function User() {
       }
 
       try {
-        await api.post('/users', user);
+        await api(process.env.REACT_APP_USER_PORT).post('/users', user);
 
         toast.success('Usuário criado');
         history.push('/checkin');

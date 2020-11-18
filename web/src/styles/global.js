@@ -81,9 +81,10 @@ export default createGlobalStyle`
     opacity: 1;
     background: #111;
     width: fit-content;
-    border-radius: 8px;
+    /* border-radius: 8px; */
     padding: 4px 8px;
     font-weight: bold;
+    width: 100px;
     /* margin: 0 auto; */
     /* justify-content: center;
     align-items: center; */

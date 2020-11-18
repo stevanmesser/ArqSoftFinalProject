@@ -18,10 +18,13 @@ export default function Login() {
 
     async function tryLogin() {
       try {
-        const resPersonage = await api.post('/login', {
-          email,
-          password,
-        });
+        const resPersonage = await api(process.env.REACT_APP_USER_PORT).post(
+          '/login',
+          {
+            email,
+            password,
+          }
+        );
 
         toast.info('Bem vindo');
         login(resPersonage.data.token);
@@ -71,11 +74,6 @@ export default function Login() {
         <button type="submit" onClick={handleTryLogin}>
           Entrar
         </button>
-
-        <Link className="link" to="/user">
-          <MdPersonAdd className="left-icons" />
-          Cadastrar
-        </Link>
       </form>
     </Container>
   );

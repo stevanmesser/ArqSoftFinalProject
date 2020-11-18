@@ -17,12 +17,16 @@ async function create(req, res) {
 }
 
 async function update(req, res) {
-  const { password } = req.body;
+  const { password, ...restBody } = req.body;
 
   const resUser = await User.findByIdAndUpdate(req.userId, {
-    ...req.body,
-    password: password ? await bcrypt.hash(password, 8) : undefined,
+    ...restBody,
   });
+
+  if (password) {
+    resUser.password = await bcrypt.hash(password, 8);
+    await resUser.save();
+  }
 
   const user = resUser.toJSON();
 

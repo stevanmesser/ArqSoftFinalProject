@@ -10,10 +10,11 @@ export function setUserLS(user) {
 
 export async function reloadUser(userId) {
   try {
-    const resUser = await api.get('/users/own');
-    console.log(resUser.data);
-    setUserLS(resUser.data);
+    const response = (
+      await api(process.env.REACT_APP_USER_PORT).get('/users/own')
+    ).data;
+    setUserLS(response);
   } catch (error) {
-    console.error(error.error);
+    console.error(`reload: ${error}`);
   }
 }

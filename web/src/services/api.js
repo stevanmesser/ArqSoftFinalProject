@@ -15,10 +15,10 @@ const apisPorteds = [];
 //   return config;
 // });
 
-export default function (port) {
-  const findApi = apisPorteds.find(({ actPort }) => actPort === port);
+export default (port) => {
+  const findApi = apisPorteds.find(({ port: actPort }) => actPort === port);
 
-  if (!findApi) {
+  if (findApi) {
     return findApi.api;
   }
 
@@ -35,4 +35,4 @@ export default function (port) {
   apisPorteds.push({ port, api });
 
   return api;
-}
+};

@@ -21,20 +21,24 @@ export default function User() {
     async function saveUser() {
       console.log(user);
       try {
-        let resUser;
+        let response;
         if (logado) {
-          resUser = await api.put('/users', user);
+          response = (
+            await api(process.env.REACT_APP_USER_PORT).put('/users', user)
+          ).data;
           toast.success('Usuário salvo');
-          setUserLS(resUser.data);
+          setUserLS(response);
         } else {
-          resUser = await api.post('/users', {
-            ...user,
-            newPassword: user.password,
-          });
+          response = (
+            await api(process.env.REACT_APP_USER_PORT).post('/users', {
+              ...user,
+              newPassword: user.password,
+            })
+          ).data;
           toast.success('Usuário criado');
           history.push('/login');
         }
-        setUser(resUser.data);
+        setUser(response);
       } catch (error) {
         toast.error('Falha ao salvar o Perfil');
         console.log(error);
@@ -50,12 +54,6 @@ export default function User() {
 
   return (
     <Container>
-      {logado && (
-        <Link className="link" to="events">
-          Inicio
-        </Link>
-      )}
-
       <form>
         <strong>{logado ? 'Perfil' : 'Cadastrar'}</strong>
 
@@ -84,8 +82,8 @@ export default function User() {
         <div className="divInput">
           <label htmlFor="cpf">CPF</label>
           <InputMask
-            name="cnpj"
-            id="cnpj"
+            name="cpf"
+            id="cpf"
             mask="99.999.999/9999-99"
             value={user.cpf || ''}
             onChange={handleInputChange}
