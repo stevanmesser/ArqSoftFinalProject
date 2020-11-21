@@ -5,6 +5,7 @@ import { parseISO, format } from 'date-fns';
 import Subscription from '~/database/models/Subscription';
 import User from '~/database/models/User';
 import Event from '~/database/models/Event';
+import Mail from '../lib/Mail';
 
 async function generateCertificate(req, res) {
   const { subscriptionId } = req.params;
@@ -24,6 +25,20 @@ async function generateCertificate(req, res) {
     subscription.certificate_code = uuid();
     subscription.save();
   }
+
+  const user = await User.findById(subscription.user_id);
+  const event = await Event.findById(subscription.event_id);
+
+  Mail.sendMail(
+    `${user.name} <${user.email}>`,
+    'Certificado Gerado',
+    `Certificado gerado com sucesso para o evento "${
+      event.name
+    }" realizado em: ${format(event.date, 'dd/MM/yyyy hh:mm:ss')}.`,
+    {
+      link: `${process.env.APP_URL}/pdf/${subscription.certificate_code}`,
+    }
+  );
 
   return res.status(200).json(subscription);
 }
@@ -83,7 +98,12 @@ async function pdfCertificate(req, res) {
     .font('Times-Bold')
     .text(event.name, { continued: true })
     .font('Times-Roman')
-    .text(` realizado no dia ${format(event.date, 'dd/MM/yyyy')}.`);
+    .text(
+      ` realizado no dia ${format(event.date, 'dd/MM/yyyy')} às ${format(
+        event.date,
+        'hh:mm:ss'
+      )}.`
+    );
 
   pdf.moveDown();
   pdf.moveDown();

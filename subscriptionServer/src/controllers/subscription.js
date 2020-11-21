@@ -1,11 +1,25 @@
-import { isAfter, subDays } from 'date-fns';
+import { isAfter, subDays, format } from 'date-fns';
 import Subscription from '~/database/models/Subscription';
 import Event from '~/database/models/Event';
+import User from '~/database/models/User';
+
+import Mail from '../lib/Mail';
 
 async function create(req, res) {
   const { id } = req.params;
 
+  const user = await User.findById(req.userId);
+  const event = await Event.findById(id);
+
   await Subscription.create({ user_id: req.userId, event_id: id });
+
+  Mail.sendMail(
+    `${user.name} <${user.email}>`,
+    'Incrição Efetuada',
+    `Inscrição efetuada com sucesso no evento "${
+      event.name
+    }" a se realizar em: ${format(event.date, 'dd/MM/yyyy hh:mm:ss')}.`
+  );
 
   return res.json({ ok: true });
 }
@@ -19,6 +33,7 @@ async function getOwns(req, res) {
 async function delet(req, res) {
   const { id: event_id } = req.params;
 
+  const user = await User.findById(req.userId);
   const event = await Event.findById(event_id);
 
   if (!event) {
@@ -33,6 +48,14 @@ async function delet(req, res) {
   }
 
   await Subscription.deleteOne({ event_id, user_id: req.userId });
+
+  Mail.sendMail(
+    `${user.name} <${user.email}>`,
+    'Incrição Cancelada',
+    `Sua inscrição foi cancelada para o evento "${
+      event.name
+    }" a se realizar em: ${format(event.date, 'dd/MM/yyyy hh:mm:ss')}.`
+  );
 
   return res.json({ ok: true });
 }
