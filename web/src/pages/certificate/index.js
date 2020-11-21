@@ -18,7 +18,11 @@ function Certificate() {
         )
       ).data;
 
-      window.open(`http://localhost:3332/pdf/${res.certificate_code}`);
+      const port = process.env.REACT_APP_CERTIFICATE_PORT;
+
+      const url = process.env.REACT_APP_URL + (port && `:${port}`);
+
+      window.open(`${url}/pdf/${res.certificate_code}`);
     } catch (error) {
       toast.error('Invalid certificate serial');
     }

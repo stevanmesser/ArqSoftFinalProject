@@ -9,4 +9,6 @@ const routes = new Router();
 
 routes.use('/checkin/:id', checkinCtl.checkin);
 
+routes.use('/subscribecheckin/:id', checkinCtl.subscribeAndCheckin);
+
 export default routes;

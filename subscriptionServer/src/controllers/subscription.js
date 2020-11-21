@@ -5,6 +5,10 @@ import Event from '~/database/models/Event';
 async function create(req, res) {
   const { id } = req.params;
 
+  if (await Subscription.findOne({ user_id: req.userId, event_id: id })) {
+    return res.json({ ok: false, message: 'Subscribed already' });
+  }
+
   await Subscription.create({ user_id: req.userId, event_id: id });
 
   return res.json({ ok: true });

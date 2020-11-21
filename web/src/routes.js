@@ -35,7 +35,7 @@ export default function Routes() {
         </Link>
       ) : (
         <Link className="link" to="/user">
-          Cadastrar
+          Register
         </Link>
       )}
       <Link className="link" to="/certificate">
