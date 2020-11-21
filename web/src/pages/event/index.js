@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import {format} from 'date-fns'
 import {
   MdAssignmentTurnedIn,
@@ -20,6 +20,8 @@ export default function Event() {
   const [newEvent, setNewEvent] = useState('');
   const [newEventDate, setNewEventDate] = useState('');
 
+  const history = useHistory();
+
   async function loadEvents() {
     const actEvents = (await api(process.env.REACT_APP_EVENT_PORT).get('/events')).data || [];
 
@@ -39,7 +41,12 @@ export default function Event() {
     async function load() {
       await loadEvents();
     }
-    load();
+
+    if (!user.email || !user.name) {
+      history.push('/user');
+    } else {
+      load();
+    }
   }, []);
 
   async function doAddEvent(e) {
@@ -92,6 +99,7 @@ export default function Event() {
 
       window.alert(res.certificate_code);
       toast.success('Generated certificate');
+      loadEvents();
     }
     catch(error) {
       toast.error('Error on generate certificate');
@@ -101,7 +109,11 @@ export default function Event() {
   async function generatePDF(e, id) {
     e.preventDefault();
 
-    window.open(`http://localhost:3332/pdf/${id}`)
+    const port = process.env.REACT_APP_CERTIFICATE_PORT;
+
+    const url = process.env.REACT_APP_URL + (port && `:${port}`);
+
+    window.open(`${url}/pdf/${id}`)
   }
 
   return (

@@ -8,6 +8,10 @@ import Mail from '../lib/Mail';
 async function create(req, res) {
   const { id } = req.params;
 
+  if (await Subscription.findOne({ user_id: req.userId, event_id: id })) {
+    return res.json({ ok: false, message: 'Subscribed already' });
+  }
+
   const user = await User.findById(req.userId);
   const event = await Event.findById(id);
 

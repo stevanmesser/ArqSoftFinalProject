@@ -11,7 +11,7 @@ const EventSchema = new Schema({
   },
   days_to_cancel: {
     type: Number,
-    default: 10,
+    default: 2,
   },
 });
 

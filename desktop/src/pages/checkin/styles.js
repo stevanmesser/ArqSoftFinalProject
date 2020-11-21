@@ -1,12 +1,10 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
-  width: 100%;
   text-align: center;
   padding: 20px;
   margin: auto;
   position: relative;
-  margin-top: 40px;
 
   * {
     display: block;
@@ -23,15 +21,30 @@ export const Container = styled.div`
   form {
     display: flex;
     flex-direction: column;
+    margin: 100px auto auto auto;
     width: 300px;
-    margin: auto;
   }
 
   input {
     text-align: center;
+    width: 100%;
+    font-size: 20px;
   }
 
   a {
     margin-top: 10px;
+  }
+
+  button {
+    width: 120px;
+    margin: 4px;
+    padding: 4px;
+  }
+
+  .divButtons {
+    flex-direction: row;
+    display: flex;
+    margin-top: 10px;
+    font-size: 16px;
   }
 `;

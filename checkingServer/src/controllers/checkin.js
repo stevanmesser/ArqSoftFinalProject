@@ -6,19 +6,22 @@ import User from '~/database/models/User';
 import Mail from '../lib/Mail';
 
 async function checkin(req, res) {
-  const { userId } = req.userId;
+  // return res.status(502);
   const { id } = req.params;
+  const { cpf } = req.body;
 
-  const user = await User.findById(userId);
+  const user = await User.findOne({ cpf });
   const event = await Event.findById(id);
 
-  await Subscription.findOneAndUpdate(
-    {
-      event_id: id,
-      user_id: userId,
-    },
-    { checked: true }
-  );
+  if (!user) {
+    return res.json({ ok: false, message: 'User not found' });
+  }
+
+  await Subscription.findOneAndUpdate({
+    event_id: id,
+    user_id: user._id,
+    checked: true,
+  });
 
   Mail.sendMail(
     `${user.name} <${user.email}>`,
@@ -31,6 +34,26 @@ async function checkin(req, res) {
   return res.json({ ok: true });
 }
 
+async function subscribeAndCheckin(req, res) {
+  const { id } = req.params;
+  const { cpf } = req.body;
+
+  const user = await User.findOne({ cpf });
+
+  if (!user) {
+    return res.json({ ok: false, message: 'User not found' });
+  }
+
+  await Subscription.create({
+    event_id: id,
+    user_id: user._id,
+    checked: true,
+  });
+
+  return res.json({ ok: true });
+}
+
 export default {
   checkin,
+  subscribeAndCheckin,
 };

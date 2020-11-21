@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { MdPersonAdd, MdPerson, MdLock } from 'react-icons/md';
+import InputMask from 'react-input-mask';
 import { toast } from 'react-toastify';
 import api from '../../services/api';
 import { login } from '~/local/auth';
@@ -8,7 +9,7 @@ import { login } from '~/local/auth';
 import { Container } from './styles';
 
 export default function Login() {
-  const [email, setEmail] = useState('');
+  const [cpf, setCPF] = useState('');
   const [password, setpassword] = useState('');
 
   const history = useHistory();
@@ -21,19 +22,23 @@ export default function Login() {
         const resPersonage = await api(process.env.REACT_APP_USER_PORT).post(
           '/login',
           {
-            email,
+            cpf,
             password,
           }
         );
 
-        toast.info('Bem vindo');
-        login(resPersonage.data.token);
-        window.location.reload(false);
-        history.push('/');
+        if (resPersonage.data.ok) {
+          toast.info('Bem vindo');
+          login(resPersonage.data.token);
+          window.location.reload(false);
+          history.push('/');
+        } else {
+          toast.error(resPersonage.data.error);
+        }
       } catch (error) {
-        setpassword('');
-        toast.error('Email ou senha inválido!');
+        toast.error('CPF ou senha inválido!');
       }
+      setpassword('');
     }
 
     tryLogin();
@@ -48,13 +53,14 @@ export default function Login() {
 
         <div className="divInput">
           <MdPerson />
-          <input
-            email="email"
-            id="email"
-            placeholder="Email"
+          <InputMask
+            name="cpf"
+            id="cpf"
+            placeholder="CPF"
+            mask="999.999.999-99"
             required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={cpf}
+            onChange={(e) => setCPF(e.target.value)}
           />
         </div>
 
@@ -62,10 +68,9 @@ export default function Login() {
           <MdLock />
           <input
             type="password"
-            email="password"
+            cpf="password"
             id="password"
-            placeholder="Senha"
-            required
+            placeholder="Password"
             value={password}
             onChange={(e) => setpassword(e.target.value)}
           />

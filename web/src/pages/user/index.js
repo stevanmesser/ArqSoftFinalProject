@@ -26,7 +26,7 @@ export default function User() {
           response = (
             await api(process.env.REACT_APP_USER_PORT).put('/users', user)
           ).data;
-          toast.success('Usuário salvo');
+          toast.success('User saved');
           setUserLS(response);
         } else {
           response = (
@@ -35,7 +35,7 @@ export default function User() {
               newPassword: user.password,
             })
           ).data;
-          toast.success('Usuário criado');
+          toast.success('User created');
           history.push('/login');
         }
         setUser(response);
@@ -45,7 +45,11 @@ export default function User() {
       }
     }
 
-    saveUser();
+    if (!user.name || !user.email || (user.needPassword && !user.password)) {
+      toast.error('Name & email & password required');
+    } else {
+      saveUser();
+    }
   }
 
   function handleInputChange(e) {
@@ -55,10 +59,10 @@ export default function User() {
   return (
     <Container>
       <form>
-        <strong>{logado ? 'Perfil' : 'Cadastrar'}</strong>
+        <strong>{logado ? 'Perfil' : 'Register'}</strong>
 
         <div className="divInput">
-          <label htmlFor="name">Nome</label>
+          <label htmlFor="name">Name</label>
           <input
             name="name"
             id="name"
@@ -84,14 +88,14 @@ export default function User() {
           <InputMask
             name="cpf"
             id="cpf"
-            mask="99.999.999/9999-99"
+            mask="999.999.999-99"
             value={user.cpf || ''}
             onChange={handleInputChange}
           />
         </div>
 
         <div className="divInput">
-          <label htmlFor="phone">Telefone</label>
+          <label htmlFor="phone">Phone</label>
           <InputMask
             name="phone"
             id="phone"
@@ -103,7 +107,7 @@ export default function User() {
 
         {(!logado || user.needPassword) && (
           <div className="divInput">
-            <label htmlFor="password">Senha</label>
+            <label htmlFor="password">Password</label>
             <input
               name="password"
               id="password"
@@ -116,14 +120,8 @@ export default function User() {
         )}
 
         <button type="submit" onClick={handleSaveUser}>
-          {logado ? 'Salvar' : 'Cadastrar'}
+          {logado ? 'Save' : 'Create'}
         </button>
-
-        {!logado ? (
-          <Link className="link" to="/login">
-            <FiArrowLeftCircle /> Já possuo cadastro
-          </Link>
-        ) : null}
       </form>
     </Container>
   );
