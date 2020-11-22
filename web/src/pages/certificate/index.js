@@ -13,15 +13,12 @@ function Certificate() {
 
     try {
       const res = (
-        await api(process.env.REACT_APP_CERTIFICATE_PORT).get(
+        await api(process.env.REACT_APP_CERTIFICATE_URL).get(
           `/verify/${certificateSerial}`
         )
       ).data;
 
-      const port = process.env.REACT_APP_CERTIFICATE_PORT;
-
-      const url = process.env.REACT_APP_URL + (port && `:${port}`);
-
+      const url = process.env.REACT_APP_CERTIFICATE_URL;
       window.open(`${url}/pdf/${res.certificate_code}`);
     } catch (error) {
       toast.error('Invalid certificate serial');

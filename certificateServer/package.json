@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "node -r sucrase/register -r module-alias/register src/server.js",
+    "start": "node -r sucrase/register -r module-alias/register --unhandled-rejections=strict src/server.js",
     "dev": "nodemon src/server.js",
     "dev:debug": "nodemon --inspect src/server.js"
   },

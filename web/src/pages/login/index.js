@@ -19,7 +19,7 @@ export default function Login() {
 
     async function tryLogin() {
       try {
-        const resPersonage = await api(process.env.REACT_APP_USER_PORT).post(
+        const resPersonage = await api(process.env.REACT_APP_USER_URL).post(
           '/login',
           {
             cpf,

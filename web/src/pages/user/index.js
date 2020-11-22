@@ -24,13 +24,13 @@ export default function User() {
         let response;
         if (logado) {
           response = (
-            await api(process.env.REACT_APP_USER_PORT).put('/users', user)
+            await api(process.env.REACT_APP_USER_URL).put('/users', user)
           ).data;
           toast.success('User saved');
           setUserLS(response);
         } else {
           response = (
-            await api(process.env.REACT_APP_USER_PORT).post('/users', {
+            await api(process.env.REACT_APP_USER_URL).post('/users', {
               ...user,
               newPassword: user.password,
             })

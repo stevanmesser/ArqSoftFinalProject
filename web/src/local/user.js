@@ -11,7 +11,7 @@ export function setUserLS(user) {
 export async function reloadUser(userId) {
   try {
     const response = (
-      await api(process.env.REACT_APP_USER_PORT).get('/users/own')
+      await api(process.env.REACT_APP_USER_URL).get('/users/own')
     ).data;
     setUserLS(response);
   } catch (error) {

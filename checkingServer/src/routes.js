@@ -7,8 +7,8 @@ const routes = new Router();
 
 // routes.use(authMiddleware);
 
-routes.use('/checkin/:id', checkinCtl.checkin);
+routes.post('/checkin/:id', checkinCtl.checkin);
 
-routes.use('/subscribecheckin/:id', checkinCtl.subscribeAndCheckin);
+routes.post('/subscribecheckin/:id', checkinCtl.subscribeAndCheckin);
 
 export default routes;

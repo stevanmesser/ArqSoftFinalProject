@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
-import {format} from 'date-fns'
+import { format } from 'date-fns';
 import {
   MdAssignmentTurnedIn,
   MdAssignmentReturned,
@@ -23,9 +23,12 @@ export default function Event() {
   const history = useHistory();
 
   async function loadEvents() {
-    const actEvents = (await api(process.env.REACT_APP_EVENT_PORT).get('/events')).data || [];
+    const actEvents =
+      (await api(process.env.REACT_APP_EVENT_URL).get('/events')).data || [];
 
-    const subs = (await api(process.env.REACT_APP_EVENT_PORT).get('/subscriptions/owns')).data || [];
+    const subs =
+      (await api(process.env.REACT_APP_EVENT_URL).get('/subscriptions/owns'))
+        .data || [];
 
     setEvents(
       actEvents.map((event) => ({
@@ -52,7 +55,7 @@ export default function Event() {
   async function doAddEvent(e) {
     e.preventDefault();
 
-    const event = await api(process.env.REACT_APP_EVENT_PORT).post('/events', {
+    const event = await api(process.env.REACT_APP_EVENT_URL).post('/events', {
       name: newEvent,
       date: newEventDate,
     });
@@ -62,7 +65,9 @@ export default function Event() {
   async function doSubscribe(e, id) {
     e.preventDefault();
 
-    const res = (await api(process.env.REACT_APP_EVENT_PORT).post(`/subscriptions/${id}`)).data;
+    const res = (
+      await api(process.env.REACT_APP_EVENT_URL).post(`/subscriptions/${id}`)
+    ).data;
 
     if (res.ok) {
       toast.success('Subscribed');
@@ -76,11 +81,13 @@ export default function Event() {
   async function doUnSubscribe(e, id) {
     e.preventDefault();
 
-    if (events.find(({_id}) => _id === id).subscription.checked) {
+    if (events.find(({ _id }) => _id === id).subscription.checked) {
       return;
     }
 
-    const res = (await api(process.env.REACT_APP_EVENT_PORT).delete(`/subscriptions/${id}`)).data;
+    const res = (
+      await api(process.env.REACT_APP_EVENT_URL).delete(`/subscriptions/${id}`)
+    ).data;
 
     if (res.ok) {
       toast.success('Unsubscribed');
@@ -95,25 +102,22 @@ export default function Event() {
     e.preventDefault();
 
     try {
-      const res = (await api(process.env.REACT_APP_CERTIFICATE_PORT).post(`/generate/${id}`)).data;
+      const res = (
+        await api(process.env.REACT_APP_CERTIFICATE_URL).post(`/generate/${id}`)
+      ).data;
 
       window.alert(res.certificate_code);
       toast.success('Generated certificate');
       loadEvents();
-    }
-    catch(error) {
+    } catch (error) {
       toast.error('Error on generate certificate');
     }
   }
 
   async function generatePDF(e, id) {
     e.preventDefault();
-
-    const port = process.env.REACT_APP_CERTIFICATE_PORT;
-
-    const url = process.env.REACT_APP_URL + (port && `:${port}`);
-
-    window.open(`${url}/pdf/${id}`)
+    const url = process.env.REACT_APP_CERTIFICATE_URL;
+    window.open(`${url}/pdf/${id}`);
   }
 
   return (
@@ -145,8 +149,13 @@ export default function Event() {
       <ul>
         {events.map((event) => (
           <li key={event._id}>
-            {event.subscription?.certificate_code &&
-              <MdPictureAsPdf onClick={e => generatePDF(e, event.subscription.certificate_code)} />}
+            {event.subscription?.certificate_code && (
+              <MdPictureAsPdf
+                onClick={(e) =>
+                  generatePDF(e, event.subscription.certificate_code)
+                }
+              />
+            )}
             {event.subscription?.checked && (
               <MdCardMembership
                 onClick={(e) => generateCertificate(e, event.subscription._id)}
@@ -161,7 +170,9 @@ export default function Event() {
                 onClick={(e) => doSubscribe(e, event._id)}
               />
             )}
-            <label htmlFor="teste" className='event-date'>{format(new Date(event.date), 'dd/MM/yy hh:mm')}</label>
+            <label htmlFor="teste" className="event-date">
+              {format(new Date(event.date), 'dd/MM/yy hh:mm')}
+            </label>
             <strong>{event.name}</strong>
           </li>
         ))}
