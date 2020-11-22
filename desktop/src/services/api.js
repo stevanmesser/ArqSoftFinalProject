@@ -2,17 +2,17 @@ import Axios from 'axios';
 
 export const TOKEN_KEY = 'persistArqSoftFinalProject:Token';
 
-const apisPorteds = [];
+const apis = [];
 
-export default (port) => {
-  const findApi = apisPorteds.find(({ port: actPort }) => actPort === port);
+export default (url) => {
+  const findApi = apis.find((api) => api.url === url);
 
   if (findApi) {
     return findApi.api;
   }
 
   const api = Axios.create({
-    baseURL: process.env.REACT_APP_URL + (port && `:${port}`),
+    baseURL: url,
   });
 
   api.interceptors.request.use(async (config) => {
@@ -21,7 +21,7 @@ export default (port) => {
     return config;
   });
 
-  apisPorteds.push({ port, api });
+  apis.push({ url, api });
 
   return api;
 };

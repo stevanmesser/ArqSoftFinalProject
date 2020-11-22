@@ -12,19 +12,19 @@ import { Container } from './styles';
 const tryLater = [];
 
 function checkin(eventId, actCpf) {
-  return api(process.env.REACT_APP_CHECKIN_PORT).post(`/checkin/${eventId}`, {
+  return api(process.env.REACT_APP_CHECKIN_URL).post(`/checkin/${eventId}`, {
     cpf: actCpf,
   });
 }
 
 function subscribe(eventId, actCpf) {
   return api(
-    process.env.REACT_APP_CHECKIN_PORT
+    process.env.REACT_APP_CHECKIN_URL
   ).post(`/subscribecheckin/${eventId}`, { cpf: actCpf });
 }
 
 function create(actCpf) {
-  return api(process.env.REACT_APP_USER_PORT).post('/users', {
+  return api(process.env.REACT_APP_USER_URL).post('/users', {
     cpf: actCpf,
   });
 }
@@ -146,13 +146,13 @@ export default function Checkin() {
         />
 
         <div className="divButtons">
-          <button type="submit" onClick={doCheckin}>
+          <button type="button" onClick={doCheckin}>
             Check in
           </button>
-          <button type="submit" onClick={doSubscribe}>
+          <button type="button" onClick={doSubscribe}>
             Subscribe
           </button>
-          <button type="submit" onClick={doRegister}>
+          <button type="button" onClick={doRegister}>
             Create User
           </button>
         </div>
