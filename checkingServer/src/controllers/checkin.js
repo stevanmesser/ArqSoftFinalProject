@@ -28,7 +28,7 @@ async function checkin(req, res) {
     'Checkin Efetuado',
     `Checkin efetuado com sucesso para o evento "${
       event.name
-    }" realizado em: ${format(event.date, 'dd/MM/yyyy hh:mm:ss')}.`
+    }" realizado em: ${format(event.date, 'dd/MM/yyyy hh:mm:ss Z')}.`
   );
 
   return res.json({ ok: true });
