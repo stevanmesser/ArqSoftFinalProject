@@ -54,12 +54,3 @@ jobs:
 
           docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
           docker push $IMAGE_ID:$VERSION
-          
-      - name: Deploy
-        run: |
-          curl -X POST http://177-44-248-88.sslip.io:9000/api/webhooks/7a4f0aa8-2a16-4155-9d25-b25daf5fbb2a
-          curl -X POST http://177-44-248-88.sslip.io:9000/api/webhooks/f9e16224-9430-4311-baaf-566cf2a4ceef
-          curl -X POST http://177-44-248-88.sslip.io:9000/api/webhooks/ec336f9a-39d7-4114-bf80-e831bfc0fb41
-          curl -X POST http://177-44-248-88.sslip.io:9000/api/webhooks/55cbd941-81a2-4ce1-85c9-987ce002c3ad
-          curl -X POST http://177-44-248-88.sslip.io:9000/api/webhooks/06101dc0-b891-4b1f-8e50-7d42c39eefc1
-          curl -X POST http://177-44-248-88.sslip.io:9000/api/webhooks/3d515841-5460-4306-b55c-027f6c063614
