@@ -59,7 +59,14 @@ async function login(req, res) {
   if (!user)
     return res.status(401).json({ ok: false, error: 'User not found' });
 
-  if (!!user.password && !(await bcrypt.compare(password, user.password)))
+  if (!password) {
+    if (user.password) {
+      return res.status(401).json({ ok: false, error: 'Password required' });
+    }
+  } else if (
+    !!user.password &&
+    !(await bcrypt.compare(password, user.password))
+  )
     return res
       .status(401)
       .json({ ok: false, error: 'Password does not match' });

@@ -9,6 +9,8 @@ import InputMask from 'react-input-mask';
 import api from '../../services/api';
 import { Container } from './styles';
 
+const TRY_LATER_LS = 'persistArqSoftFinalProject:tryLater';
+
 const tryLater = [];
 
 function checkin(eventId, actCpf) {
@@ -30,8 +32,6 @@ function create(actCpf) {
 }
 
 async function syncTrysLaters(eventId) {
-  console.log('teste', tryLater);
-
   for (const key in tryLater) {
     try {
       const obj = tryLater[key];
@@ -44,6 +44,7 @@ async function syncTrysLaters(eventId) {
         await create(obj.cpf);
       }
       tryLater.splice(key);
+      localStorage.setItem(TRY_LATER_LS, JSON.stringify(tryLater));
     } catch (error) {
       console.log('error teste', String(error));
       if (String(error).includes('Network Error')) {
@@ -54,10 +55,14 @@ async function syncTrysLaters(eventId) {
 }
 
 export default function Checkin() {
-  const [eventId, setEventId] = useState('5fa9cd04190ebb174033232a');
+  const [eventId, setEventId] = useState('');
   const [cpf, setCPF] = useState('');
 
   useEffect(() => {
+    Array.prototype.push.apply(
+      tryLater,
+      JSON.parse(localStorage.getItem(TRY_LATER_LS)) || []
+    );
     setInterval(() => syncTrysLaters(eventId), 12000);
   }, []);
 
@@ -74,6 +79,7 @@ export default function Checkin() {
     } catch (error) {
       if (String(error).includes('Network Error')) {
         tryLater.push({ method: 'checkin', cpf });
+        localStorage.setItem(TRY_LATER_LS, JSON.stringify(tryLater));
         toast.error('Network Off');
         setCPF('');
       } else {
@@ -95,6 +101,7 @@ export default function Checkin() {
     } catch (error) {
       if (String(error).includes('Network Error')) {
         tryLater.push({ method: 'subscribe', cpf });
+        localStorage.setItem(TRY_LATER_LS, JSON.stringify(tryLater));
         toast.error('Network Off');
         setCPF('');
       } else {
@@ -116,6 +123,7 @@ export default function Checkin() {
     } catch (error) {
       if (String(error).includes('Network Error')) {
         tryLater.push({ method: 'register', cpf });
+        localStorage.setItem(TRY_LATER_LS, JSON.stringify(tryLater));
         toast.error('Network Off');
         setCPF('');
       } else {
