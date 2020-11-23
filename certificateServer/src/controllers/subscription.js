@@ -34,7 +34,7 @@ async function generateCertificate(req, res) {
     'Certificado Gerado',
     `Certificado gerado com sucesso para o evento "${
       event.name
-    }" realizado em: ${format(event.date, 'dd/MM/yyyy hh:mm:ss Z')}.`,
+    }" realizado em: ${format(event.date, 'dd/MM/yyyy hh:mm:ss zzzz')}.`,
     {
       link: `${process.env.APP_URL}/pdf/${subscription.certificate_code}`,
     }

@@ -22,7 +22,7 @@ async function create(req, res) {
     'Incrição Efetuada',
     `Inscrição efetuada com sucesso no evento "${
       event.name
-    }" a se realizar em: ${format(event.date, 'dd/MM/yyyy hh:mm:ss Z')}.`
+    }" a se realizar em: ${format(event.date, 'dd/MM/yyyy hh:mm:ss zzzz')}.`
   );
 
   return res.json({ ok: true });
@@ -58,7 +58,7 @@ async function delet(req, res) {
     'Incrição Cancelada',
     `Sua inscrição foi cancelada para o evento "${
       event.name
-    }" a se realizar em: ${format(event.date, 'dd/MM/yyyy hh:mm:ss Z')}.`
+    }" a se realizar em: ${format(event.date, 'dd/MM/yyyy hh:mm:ss zzzz')}.`
   );
 
   return res.json({ ok: true });
