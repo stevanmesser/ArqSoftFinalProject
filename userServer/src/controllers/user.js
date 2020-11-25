@@ -4,14 +4,20 @@ import authConfig from '~/configs/auth';
 import User from '~/database/models/User';
 
 async function create(req, res) {
-  const { password } = req.body;
+  const { password, cpf } = req.body;
 
-  const resUser = await User.create({
-    ...req.body,
-    password: password && (await bcrypt.hash(password, 8)),
-  });
-
-  const user = resUser.toJSON();
+  let user = await User.findOne({ cpf });
+  if (user) {
+    await user.update({
+      ...req.body,
+      password: password && (await bcrypt.hash(password, 8)),
+    });
+  } else {
+    user = await User.create({
+      ...req.body,
+      password: password && (await bcrypt.hash(password, 8)),
+    });
+  }
 
   return res.json({ ...user, password: undefined, ok: true });
 }
