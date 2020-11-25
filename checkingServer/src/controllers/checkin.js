@@ -17,11 +17,15 @@ async function checkin(req, res) {
     return res.json({ ok: false, message: 'User not found' });
   }
 
-  await Subscription.findOneAndUpdate({
-    event_id: id,
-    user_id: user._id,
-    checked: true,
-  });
+  await Subscription.findOneAndUpdate(
+    {
+      event_id: id,
+      user_id: user._id,
+    },
+    {
+      checked: true,
+    }
+  );
 
   Mail.sendMail(
     `${user.name} <${user.email}>`,
